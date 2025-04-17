@@ -13,8 +13,7 @@ class FeedTableViewCell: UITableViewCell, FeedConfigurable {
     let author = UILabel()
     let title = UILabel()
     let tagLabel = TagLabel()
-
-    let headerHorizontalStack = UIStackView()
+    let headerHorizontalStack = HeaderStackView()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -32,12 +31,11 @@ class FeedTableViewCell: UITableViewCell, FeedConfigurable {
         containerView.layer.masksToBounds = true
         containerView.layer.borderWidth = 1
         containerView.layer.borderColor = UIColor.black.cgColor
-
         //TODO: Add bottom border
     }
 
     private func setupCell() {
-        setupHeaderHorizontalStack()
+        headerHorizontalStack.setUpViews(leadView: author, trailView: tagLabel)
         setupLabels()
         headerHorizontalStack.translatesAutoresizingMaskIntoConstraints = false
         containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -56,14 +54,15 @@ class FeedTableViewCell: UITableViewCell, FeedConfigurable {
             containerView.leadingAnchor
                 .constraint(equalTo: contentView.leadingAnchor, constant: 16),
 
-            // MARK - Header Horizontal Stack
+            // MARK: - Header Horizontal Stack
             headerHorizontalStack.topAnchor
                 .constraint(equalTo: containerView.topAnchor, constant: 16),
             headerHorizontalStack.trailingAnchor
                 .constraint(equalTo: containerView.trailingAnchor, constant: -16),
             headerHorizontalStack.leadingAnchor
                 .constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            // MARK - Title Label
+
+            // MARK: - Title Label
             title.topAnchor
                 .constraint(equalTo: headerHorizontalStack.bottomAnchor, constant: 8),
             title.trailingAnchor
@@ -74,34 +73,10 @@ class FeedTableViewCell: UITableViewCell, FeedConfigurable {
     }
 
     private func setupLabels() {
-        author.translatesAutoresizingMaskIntoConstraints = false
-        author.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        author.numberOfLines = 0
-        author.lineBreakMode = .byWordWrapping
-
         title.numberOfLines = 0
         title.lineBreakMode = .byWordWrapping
         title.translatesAutoresizingMaskIntoConstraints = false
         title.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-
-        tagLabel.label.translatesAutoresizingMaskIntoConstraints = false
-        tagLabel.label.setContentHuggingPriority(.defaultLow, for: .horizontal)
-    }
-
-    private func setupHeaderHorizontalStack() {
-        let spacer = UIView()
-        spacer.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        spacer
-            .setContentCompressionResistancePriority(
-                .defaultLow,
-                for: .horizontal
-            )
-        headerHorizontalStack.axis = .horizontal
-        headerHorizontalStack.spacing = 8.0
-        headerHorizontalStack.distribution = .fill
-        headerHorizontalStack.addArrangedSubview(author)
-        headerHorizontalStack.addArrangedSubview(spacer)
-        headerHorizontalStack.addArrangedSubview(tagLabel)
     }
 
     func configure(with feed: FeedModel) {
