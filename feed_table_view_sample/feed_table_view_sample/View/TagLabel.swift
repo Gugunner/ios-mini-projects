@@ -27,6 +27,7 @@ class TagLabel: UIView {
         self.layer.cornerRadius = 8
         self.layer.masksToBounds = true
         self.addSubview(label)
+        label.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             //Add paddings to label container
@@ -39,7 +40,6 @@ class TagLabel: UIView {
                 .constraint(equalTo: self.leadingAnchor, constant: 8),
 
             self.heightAnchor.constraint(equalToConstant: 36),
-            self.widthAnchor.constraint(equalToConstant: 56)
         ])
         label.textAlignment = .center
         label.baselineAdjustment = .alignCenters
