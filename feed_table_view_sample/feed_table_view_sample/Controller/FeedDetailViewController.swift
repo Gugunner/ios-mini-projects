@@ -10,6 +10,7 @@ import UIKit
 class FeedDetailViewController: UIViewController, FeedConfigurable {
 
     let containerView = UIView()
+    let scrollView = UIScrollView()
     var feed = FeedModel()
     let author = UILabel()
     let tagLabel = TagLabel()
@@ -29,7 +30,8 @@ class FeedDetailViewController: UIViewController, FeedConfigurable {
 
         createdAt.translatesAutoresizingMaskIntoConstraints = false
         createdAt.numberOfLines = 1
-        createdAt.font.withSize(10)
+        createdAt.font = UIFont.systemFont(ofSize: 12)
+        createdAt.textAlignment = .right
 
         //Configure a super view that groups all content
         containerView.addSubview(headerStack)
@@ -38,39 +40,77 @@ class FeedDetailViewController: UIViewController, FeedConfigurable {
         containerView.layer.backgroundColor = UIColor.white.cgColor
         containerView.translatesAutoresizingMaskIntoConstraints = false
 
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(containerView)
+
         //Add the container view and pass on a background color
-        view.addSubview(containerView)
+        view.addSubview(scrollView)
         view.layer.backgroundColor = UIColor.white.cgColor
         
-        NSLayoutConstraint.activate([
+        NSLayoutConstraint.activate(
+[
             //Paddings
-            containerView.topAnchor
+            scrollView.topAnchor
                 .constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            containerView.trailingAnchor
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor
                 .constraint(equalTo: view.trailingAnchor),
-            containerView.bottomAnchor
+            scrollView.bottomAnchor
                 .constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            
+
+            containerView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            containerView.trailingAnchor
+                .constraint(equalTo: scrollView.trailingAnchor),
+            containerView.bottomAnchor
+                .constraint(equalTo: scrollView.bottomAnchor),
+            containerView.leadingAnchor
+                .constraint(equalTo: scrollView.leadingAnchor),
+            containerView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+
             headerStack.topAnchor
-                .constraint(equalTo: containerView.topAnchor, constant: 20),
+                .constraint(
+                    equalTo: containerView.topAnchor,
+                    constant: Spacing
+                        .xl),
             headerStack.trailingAnchor
-                .constraint(equalTo: containerView.trailingAnchor, constant: -16),
+                .constraint(
+                    equalTo: containerView.trailingAnchor,
+                    constant: -Spacing
+                        .l),
             headerStack.leadingAnchor
-                .constraint(equalTo: containerView.leadingAnchor, constant: 16),
+                .constraint(
+                    equalTo: containerView.leadingAnchor,
+                    constant: Spacing
+                        .l),
 
             feedTitle.topAnchor
-                .constraint(equalTo: headerStack.bottomAnchor, constant: 20),
+                .constraint(
+                    equalTo: headerStack.bottomAnchor,
+                    constant: Spacing
+                        .xl),
             feedTitle.trailingAnchor
-                .constraint(equalTo: containerView.trailingAnchor, constant: -16),
+                .constraint(
+                    equalTo: containerView.trailingAnchor,
+                    constant: -Spacing
+                        .l),
             feedTitle.leadingAnchor
-                .constraint(equalTo: containerView.leadingAnchor, constant: 16),
+                .constraint(
+                    equalTo: containerView.leadingAnchor,
+                    constant: Spacing
+                        .l),
 
             createdAt.bottomAnchor
-                .constraint(equalTo: containerView.bottomAnchor, constant: -20),
+                .constraint(
+                    equalTo: containerView.bottomAnchor,
+                    constant: -Spacing
+                        .xl),
             createdAt.trailingAnchor
-                .constraint(equalTo: headerStack.trailingAnchor),
-        ])
+                .constraint(
+                    equalTo: containerView.trailingAnchor,
+                    constant: -Spacing
+                        .l),
+        ]
+)
     }
 
     func configure(with feed: FeedModel) {
@@ -78,15 +118,14 @@ class FeedDetailViewController: UIViewController, FeedConfigurable {
         author.text = feed.author
         tagLabel.label.text = feed.type.rawValue
         feedTitle.text = feed.title
-        createdAt.text = feed.createdAt.formatted(
-            .iso8601
-                .month()
-                .day()
-                .year()
-                .dateSeparator(.dash)
-                .dateTimeSeparator(.space)
-                .time(includingFractionalSeconds: false)
-                .timeSeparator(.colon)
-        )
+        createdAt.text = "Posted on: \(getFormattedText(from: feed.createdAt))"
+    }
+
+    private func getFormattedText(from date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .long
+        dateFormatter.timeStyle = .medium
+        dateFormatter.locale = Locale(identifier: "en_US")
+        return dateFormatter.string(from: date)
     }
 }
