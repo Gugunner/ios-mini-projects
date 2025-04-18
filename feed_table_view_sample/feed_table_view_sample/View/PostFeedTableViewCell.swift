@@ -9,25 +9,20 @@ import UIKit
 
 class PostFeedTableViewCell: FeedTableViewCell {
 
-    let contentImageView = UIImageView()
+    let contentImageView = FeedImageView()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setUpImageView()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+        setUpImageView()
     }
 
-    func setImageFromName(named: String) {
-        guard let image = UIImage(named: named) else { return }
-        contentImageView.image = image
-        contentImageView.clipsToBounds = true
-        contentImageView.contentMode = .scaleAspectFit
-        contentImageView.translatesAutoresizingMaskIntoConstraints = false
-
+    private func setUpImageView() {
         containerView.addSubview(contentImageView)
-        let aspectRatio = image.size.height / image.size.width
         NSLayoutConstraint.activate([
             // MARK: - Padding
             contentImageView.topAnchor
@@ -38,19 +33,12 @@ class PostFeedTableViewCell: FeedTableViewCell {
                 .constraint(equalTo: title.leadingAnchor),
             contentImageView.bottomAnchor
                 .constraint(equalTo: containerView.bottomAnchor, constant: -16),
-
-            // MARK: - Dimensions
-            contentImageView.heightAnchor
-                .constraint(
-                    equalTo: contentImageView.widthAnchor,
-                    multiplier: aspectRatio
-                )
         ])
     }
 
     override func configure(with feed: FeedModel) {
         super.configure(with: feed)
         guard let postFeed = feed as? PostFeedModel else { return }
-        setImageFromName(named: postFeed.imagePath)
+        contentImageView.configureImageFrom(name: postFeed.imagePath)
     }
 }
