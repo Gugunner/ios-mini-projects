@@ -42,7 +42,7 @@ class FeedLoader: FeedLoaderProtocol {
             case FeedType.post.rawValue:
                 return loadPostFeed(datagram)
             default:
-                throw FeedableError.unknownType
+                return loadUnknowFeed()
         }
     }
 
@@ -82,6 +82,10 @@ class FeedLoader: FeedLoaderProtocol {
         return result
     }
 
+    func loadUnknowFeed() -> FeedModel {
+        return FeedModel()
+    }
+
     func loadTextFeed(_ textDatagram: [String:String]) -> FeedModel? {
         guard let fields = extractRequiredFields(
             textDatagram,
@@ -94,7 +98,6 @@ class FeedLoader: FeedLoaderProtocol {
             type: fields["type"]!,
             isoCreatedAt: fields["isoCreatedAt"]!
         )
-
     }
 
     func loadPostFeed(_ postDatagram: [String:String]) -> FeedModel? {
