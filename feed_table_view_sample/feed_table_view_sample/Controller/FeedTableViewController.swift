@@ -8,6 +8,7 @@
 import UIKit
 
 class FeedTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+
     let loader = FeedLoader()
     let tableView = UITableView()
     let tester = FeedTester()
@@ -67,29 +68,23 @@ class FeedTableViewController: UIViewController, UITableViewDelegate, UITableVie
             for: indexPath
         )
 
-        if let textCell = cell as? TextFeedTableViewCell {
-            textCell.configure(with: feed)
-            return textCell
-        }
-
-        if let postCell = cell as? PostFeedTableViewCell {
-            postCell.configure(with: feed)
-            return postCell
-        }
-
         if let feedCell = cell as? FeedTableViewCell {
             feedCell.configure(with: feed)
-            return feedCell
         }
 
+        if let textCell = cell as? TextFeedTableViewCell { return textCell }
+
+        if let postCell = cell as? PostFeedTableViewCell { return postCell }
+
+        //Default Cell
         return cell
     }
 
     func cellIdentifier(for type: FeedType) -> String {
         switch (type) {
-        case FeedType.post:
+        case .post:
             return "PostFeedCell"
-        case FeedType.text:
+        case .text:
             return "TextFeedCell"
         default:
             return "FeedCell"
@@ -99,10 +94,29 @@ class FeedTableViewController: UIViewController, UITableViewDelegate, UITableVie
     // MARK: - UITableView Delegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(tester.shout(feed: feeds[indexPath.row]))
+        tableView.deselectRow(at: indexPath, animated: false)
+        guard indexPath.row < feeds.count else { return }
+        let feed = feeds[indexPath.row]
+        let feedDetailViewController = getFeedDetailViewController(
+            type: feed.type
+        )
+        feedDetailViewController.configure(with: feed)
+        navigationController?
+            .pushViewController(
+                feedDetailViewController,
+                animated: true
+            )
     }
 
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
+    func getFeedDetailViewController(type: FeedType) -> FeedDetailViewController {
+        switch type {
+            case .text:
+                return TextFeedDetailViewController()
+            case .post:
+                return PostFeedDetailViewController()
+            default:
+                return FeedDetailViewController()
+        }
     }
 }
 
