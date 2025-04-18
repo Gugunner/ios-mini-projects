@@ -27,14 +27,20 @@ class TextFeedTableViewCell: FeedTableViewCell {
         message.numberOfLines = 0
         containerView.addSubview(message)
 
-        NSLayoutConstraint.activate([
+        NSLayoutConstraint.activate(
+[
             // MARK: - Paddings
             message.topAnchor
-                .constraint(equalTo: title.bottomAnchor, constant: 8),
+                .constraint(equalTo: title.bottomAnchor, constant: Spacing.s),
             message.trailingAnchor.constraint(equalTo: title.trailingAnchor),
             message.leadingAnchor.constraint(equalTo: title.leadingAnchor),
-            message.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8)
-        ])
+            message.bottomAnchor
+                .constraint(
+                    equalTo: containerView.bottomAnchor,
+                    constant: -Spacing
+                        .s)
+        ]
+)
     }
 
     override func configure(with feed: FeedModel) {
@@ -42,5 +48,4 @@ class TextFeedTableViewCell: FeedTableViewCell {
         guard let textFeed = feed as? TextFeedModel else { return }
         message.text = textFeed.message
     }
-
 }

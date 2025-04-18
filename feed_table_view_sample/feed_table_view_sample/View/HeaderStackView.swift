@@ -33,7 +33,7 @@ class HeaderStackView: UIStackView {
 
     private func configureStack() {
         axis = .horizontal
-        spacing = 8.0
+        spacing = Spacing.s
         distribution = .fill
     }
 
