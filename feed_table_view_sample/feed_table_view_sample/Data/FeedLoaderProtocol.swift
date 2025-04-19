@@ -5,10 +5,10 @@
 //  Created by Raul_Alonzo on 09/04/25.
 //
 
-enum FeedableError: Error {
+enum FeedableError: Error, Equatable {
     case missingValues(_ values: String)
     case cannotLoadFeed(_ message: String)
-    case unknownType
+    case undefinedType
     case emptyFeed
     case emptyFeeds
 }
