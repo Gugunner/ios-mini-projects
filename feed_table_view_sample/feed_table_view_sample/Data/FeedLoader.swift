@@ -32,7 +32,7 @@ class FeedLoader: FeedLoaderProtocol {
         do {
             try checkFeedInDict(datagram)
         } catch FeedableError.missingValues(let values) {
-            throw FeedableError.cannotLoadFeed("The Feed is missin the followin values \(values)")
+            throw FeedableError.cannotLoadFeed("The feed is missing the following values: \(values)")
         } catch {
             throw FeedableError.cannotLoadFeed("The feed could not be loaded due to error: \(error)")
         }
@@ -53,19 +53,25 @@ class FeedLoader: FeedLoaderProtocol {
             throw FeedableError.emptyFeed
         }
 
-        let requiredKeys: [String] = try {
-            switch (datagram["type"]!) {
+        guard let type = datagram["type"] else {
+            throw FeedableError.undefinedType
+        }
+
+        let requiredKeys: [String] = {
+            switch (type) {
                 case FeedType.text.rawValue:
                 return feedModelFields + textFeedModelFields
-
             case FeedType.post.rawValue:
                 return feedModelFields + postFeedModelFields
             default:
-                throw FeedableError.unknownType
+                return feedModelFields
             }
         }()
 
-        let errors = requiredKeys.filter { datagram[$0] == nil }
+        let errors = requiredKeys.filter {
+            datagram[$0] == nil || datagram[$0]!.isEmpty
+        }
+        
         if !errors.isEmpty {
             throw FeedableError.missingValues(errors.joined(separator: ", "))
         }
