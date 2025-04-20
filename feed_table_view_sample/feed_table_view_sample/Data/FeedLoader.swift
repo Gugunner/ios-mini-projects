@@ -15,7 +15,7 @@ class FeedLoader: FeedLoaderProtocol {
         if data.isEmpty {
             throw FeedableError.emptyFeeds
         }
-        return try data.compactMap({ (datagram) -> Feed? in
+        return try data.compactMap({ (datagram) -> FeedModel? in
             do {
                 return try loadSingleFeed(datagram)
             } catch FeedableError.cannotLoadFeed(let message) {
