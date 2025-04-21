@@ -14,6 +14,9 @@ enum FeedableError: Error, Equatable {
 }
 
 protocol FeedLoaderProtocol {
-    func loadAllFeeds(data: [[String:String]]) throws -> [FeedModel]
-    func loadSingleFeed(_ datagram: [String:String]) throws -> FeedModel?
+    var data: [FeedDatagram]? { get }
+    var feeds: [FeedModel]? { get }
+    func loadData() async throws //Use it to load data
+    func loadAllFeeds() throws //Use it to load feeds
+    func loadSingleFeed(_ datagram: FeedDatagram) throws -> FeedModel?
 }
