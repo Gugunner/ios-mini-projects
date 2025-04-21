@@ -18,7 +18,5 @@ class PostFeedModel: FeedModel {
             type: type,
             isoCreatedAt: isoCreatedAt
         )
-
     }
-
 }

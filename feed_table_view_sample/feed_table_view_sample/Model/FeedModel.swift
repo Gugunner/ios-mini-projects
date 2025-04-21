@@ -34,4 +34,11 @@ class FeedModel: FeedProtocol {
         self.createdAt = ISO8601DateFormatter().date(from: isoCreatedAt) ?? Date()
     }
 
+    init() {
+        self.author = "Unknown"
+        self.title = "No title"
+        self.type = FeedType.unknown
+        self.createdAt = Date()
+    }
+
 }

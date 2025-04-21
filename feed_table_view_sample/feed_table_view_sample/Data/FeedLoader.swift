@@ -15,7 +15,7 @@ class FeedLoader: FeedLoaderProtocol {
         if data.isEmpty {
             throw FeedableError.emptyFeeds
         }
-        return try data.compactMap({ (datagram) -> Feed? in
+        return try data.compactMap({ (datagram) -> FeedModel? in
             do {
                 return try loadSingleFeed(datagram)
             } catch FeedableError.cannotLoadFeed(let message) {
@@ -32,7 +32,7 @@ class FeedLoader: FeedLoaderProtocol {
         do {
             try checkFeedInDict(datagram)
         } catch FeedableError.missingValues(let values) {
-            throw FeedableError.cannotLoadFeed("The Feed is missin the followin values \(values)")
+            throw FeedableError.cannotLoadFeed("The feed is missing the following values: \(values)")
         } catch {
             throw FeedableError.cannotLoadFeed("The feed could not be loaded due to error: \(error)")
         }
@@ -42,7 +42,7 @@ class FeedLoader: FeedLoaderProtocol {
             case FeedType.post.rawValue:
                 return loadPostFeed(datagram)
             default:
-                throw FeedableError.unknownType
+                return loadUnknowFeed()
         }
     }
 
@@ -53,19 +53,25 @@ class FeedLoader: FeedLoaderProtocol {
             throw FeedableError.emptyFeed
         }
 
-        let requiredKeys: [String] = try {
-            switch (datagram["type"]!) {
+        guard let type = datagram["type"] else {
+            throw FeedableError.undefinedType
+        }
+
+        let requiredKeys: [String] = {
+            switch (type) {
                 case FeedType.text.rawValue:
                 return feedModelFields + textFeedModelFields
-
             case FeedType.post.rawValue:
                 return feedModelFields + postFeedModelFields
             default:
-                throw FeedableError.unknownType
+                return feedModelFields
             }
         }()
 
-        let errors = requiredKeys.filter { datagram[$0] == nil }
+        let errors = requiredKeys.filter {
+            datagram[$0] == nil || datagram[$0]!.isEmpty
+        }
+        
         if !errors.isEmpty {
             throw FeedableError.missingValues(errors.joined(separator: ", "))
         }
@@ -82,6 +88,10 @@ class FeedLoader: FeedLoaderProtocol {
         return result
     }
 
+    func loadUnknowFeed() -> FeedModel {
+        return FeedModel()
+    }
+
     func loadTextFeed(_ textDatagram: [String:String]) -> FeedModel? {
         guard let fields = extractRequiredFields(
             textDatagram,
@@ -94,7 +104,6 @@ class FeedLoader: FeedLoaderProtocol {
             type: fields["type"]!,
             isoCreatedAt: fields["isoCreatedAt"]!
         )
-
     }
 
     func loadPostFeed(_ postDatagram: [String:String]) -> FeedModel? {

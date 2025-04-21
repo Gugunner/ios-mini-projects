@@ -23,17 +23,22 @@ class PostFeedTableViewCell: FeedTableViewCell {
 
     private func setUpImageView() {
         containerView.addSubview(contentImageView)
-        NSLayoutConstraint.activate([
+        NSLayoutConstraint.activate(
+[
             // MARK: - Padding
             contentImageView.topAnchor
-                .constraint(equalTo: title.bottomAnchor, constant: 8),
+                .constraint(equalTo: title.bottomAnchor, constant: Spacing.s),
             contentImageView.trailingAnchor
                 .constraint(equalTo: title.trailingAnchor),
             contentImageView.leadingAnchor
                 .constraint(equalTo: title.leadingAnchor),
             contentImageView.bottomAnchor
-                .constraint(equalTo: containerView.bottomAnchor, constant: -16),
-        ])
+                .constraint(
+                    equalTo: containerView.bottomAnchor,
+                    constant: -Spacing
+                        .l),
+        ]
+)
     }
 
     override func configure(with feed: FeedModel) {
