@@ -19,8 +19,8 @@ final class AppContextManagerTests: XCTestCase {
     }
 
     func testAppContextManagerConfiguresWithMockAppContext() throws {
-        AppContextManager.app.configure(with: MockAppContext())
-        XCTAssertTrue(AppContextManager.app.shared is MockAppContext)
+        AppContextManager.app.configure(with: FakeAppContext())
+        XCTAssertTrue(AppContextManager.app.shared is FakeAppContext)
     }
 
     func testAppContextManagerFailsIfNotConfigured() throws {
