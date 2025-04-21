@@ -9,7 +9,7 @@ import UIKit
 
 class FeedTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    let loader = FeedLoader()
+    let loader = AppContextManager.app.shared.services.feedLoader
     let tableView = UITableView()
     let tester = FeedTester()
     var feeds: [FeedModel] = []
@@ -21,12 +21,16 @@ class FeedTableViewController: UIViewController, UITableViewDelegate, UITableVie
     }
 
     private func loadData() {
-        do {
-            try feeds = loader.loadAllFeeds(data: dataSample)
-        } catch {
-            print("There was an error loading feeds: \(error)")
+        Task {
+            do {
+                try await loader.loadData()
+                try loader.loadAllFeeds()
+                feeds = loader.feeds ?? []
+                tableView.reloadData()
+            } catch {
+                print("There was an error loading feeds: \(error)")
+            }
         }
-        tableView.reloadData()
     }
 
     private func setupTableView() {
