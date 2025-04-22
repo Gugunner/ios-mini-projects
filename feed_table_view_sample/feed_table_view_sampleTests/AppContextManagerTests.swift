@@ -12,6 +12,7 @@ final class AppContextManagerTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
+        AppContextManager.app.clearContext()
     }
 
     override func tearDownWithError() throws {
