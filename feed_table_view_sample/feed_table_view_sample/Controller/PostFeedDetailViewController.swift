@@ -15,6 +15,19 @@ class PostFeedDetailViewController: FeedDetailViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUpViews()
+    }
+
+    override func configure(with feed: FeedModel) {
+        super.configure(with: feed)
+        guard let postFeed = feed as? PostFeedModel else { return }
+        feedDescription.text = postFeed.description
+        imageView.configureImageFrom(name: postFeed.imagePath)
+    }
+}
+
+extension PostFeedDetailViewController {
+    private func setUpViews() {
         feedDescription.translatesAutoresizingMaskIntoConstraints = false
         feedDescription.numberOfLines = 0
         feedDescription.textAlignment = .justified
@@ -24,47 +37,29 @@ class PostFeedDetailViewController: FeedDetailViewController {
 
         view.addSubview(feedDescription)
         view.addSubview(imageView)
-
         NSLayoutConstraint.activate(
 [
             feedDescription.topAnchor
                 .constraint(equalTo: feedTitle.bottomAnchor, constant: Spacing.xl),
             feedDescription.trailingAnchor
                 .constraint(
-                    equalTo: containerView.trailingAnchor,
-                    constant: -Spacing
-                        .l),
+                    equalTo: containerView.trailingAnchor),
             feedDescription.leadingAnchor
                 .constraint(
-                    equalTo: containerView.leadingAnchor,
-                    constant: Spacing
-                        .l),
+                    equalTo: containerView.leadingAnchor),
 
             imageView.topAnchor
                 .constraint(
-                    equalTo: feedDescription.bottomAnchor,
-                    constant: Spacing
-                        .xl),
+                    equalTo: feedDescription.bottomAnchor),
             imageView.trailingAnchor
                 .constraint(
-                    equalTo: containerView.trailingAnchor,
-                    constant: -Spacing.l
-                ),
+                    equalTo: containerView.trailingAnchor),
             imageView.bottomAnchor
                 .constraint(equalTo: createdAt.topAnchor, constant: -Spacing.xl),
             imageView.leadingAnchor
                 .constraint(
-                    equalTo: containerView.leadingAnchor,
-                    constant: Spacing
-                        .l),
+                    equalTo: containerView.leadingAnchor),
         ]
 )
-    }
-
-    override func configure(with feed: FeedModel) {
-        super.configure(with: feed)
-        guard let postFeed = feed as? PostFeedModel else { return }
-        feedDescription.text = postFeed.description
-        imageView.configureImageFrom(name: postFeed.imagePath)
     }
 }
