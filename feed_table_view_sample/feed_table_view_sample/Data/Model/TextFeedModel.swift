@@ -19,7 +19,5 @@ class TextFeedModel: FeedModel {
             type: type,
             isoCreatedAt: isoCreatedAt
         )
-
     }
-
 }

@@ -19,21 +19,27 @@ class TextFeedDetailViewController: FeedDetailViewController {
 
         containerView.addSubview(message)
 
-        NSLayoutConstraint.activate([
+        NSLayoutConstraint.activate(
+[
             message.topAnchor
-                .constraint(equalTo: feedTitle.bottomAnchor, constant: 20),
+                .constraint(equalTo: feedTitle.bottomAnchor, constant: Spacing.xl),
             message.trailingAnchor
-                .constraint(equalTo: containerView.trailingAnchor, constant: -16),
+                .constraint(
+                    equalTo: containerView.trailingAnchor,
+                    constant: -Spacing
+                        .l),
             message.leadingAnchor
-                .constraint(equalTo: containerView.leadingAnchor, constant: 16),
-        ])
+                .constraint(
+                    equalTo: containerView.leadingAnchor,
+                    constant: Spacing
+                        .l),
+        ]
+)
     }
 
     override func configure(with feed: FeedModel) {
         super.configure(with: feed)
-        if let textFeed = feed as? TextFeedModel {
-            message.text = textFeed.message
-        }
+        guard let textFeed =  feed as? TextFeedModel else { return }
+        message.text = textFeed.message
     }
-
 }
