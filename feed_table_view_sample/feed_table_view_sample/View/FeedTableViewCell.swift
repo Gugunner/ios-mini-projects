@@ -44,32 +44,64 @@ class FeedTableViewCell: UITableViewCell, FeedConfigurable {
 
         contentView.addSubview(containerView)
 
-        NSLayoutConstraint.activate([
+        NSLayoutConstraint.activate(
+[
             containerView.topAnchor
-                .constraint(equalTo: contentView.topAnchor, constant: 8),
+                .constraint(
+                    equalTo: contentView.topAnchor,
+                    constant: Spacing.s
+                ),
             containerView.trailingAnchor
-                .constraint(equalTo: contentView.trailingAnchor, constant: -16),
+                .constraint(
+                    equalTo: contentView.trailingAnchor,
+                    constant: -Spacing
+                        .l),
             containerView.bottomAnchor
-                .constraint(equalTo: contentView.bottomAnchor, constant: -8),
+                .constraint(
+                    equalTo: contentView.bottomAnchor,
+                    constant: -Spacing
+                        .m),
             containerView.leadingAnchor
-                .constraint(equalTo: contentView.leadingAnchor, constant: 16),
+                .constraint(
+                    equalTo: contentView.leadingAnchor,
+                    constant: Spacing
+                        .l),
 
             // MARK: - Header Horizontal Stack
             headerHorizontalStack.topAnchor
-                .constraint(equalTo: containerView.topAnchor, constant: 16),
+                .constraint(
+                    equalTo: containerView.topAnchor,
+                    constant: Spacing
+                        .s),
             headerHorizontalStack.trailingAnchor
-                .constraint(equalTo: containerView.trailingAnchor, constant: -16),
+                .constraint(
+                    equalTo: containerView.trailingAnchor,
+                    constant: -Spacing
+                        .l),
             headerHorizontalStack.leadingAnchor
-                .constraint(equalTo: containerView.leadingAnchor, constant: 16),
+                .constraint(
+                    equalTo: containerView.leadingAnchor,
+                    constant: Spacing
+                        .l),
 
             // MARK: - Title Label
             title.topAnchor
-                .constraint(equalTo: headerHorizontalStack.bottomAnchor, constant: 8),
+                .constraint(
+                    equalTo: headerHorizontalStack.bottomAnchor,
+                    constant: Spacing
+                        .s),
             title.trailingAnchor
-                .constraint(equalTo: containerView.trailingAnchor, constant: -16),
+                .constraint(
+                    equalTo: containerView.trailingAnchor,
+                    constant: -Spacing
+                        .l),
             title.leadingAnchor
-                .constraint(equalTo: containerView.leadingAnchor, constant: 16),
-        ])
+                .constraint(
+                    equalTo: containerView.leadingAnchor,
+                    constant: Spacing
+                        .l),
+        ]
+)
     }
 
     private func setupLabels() {
