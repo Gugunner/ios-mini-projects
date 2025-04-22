@@ -31,15 +31,14 @@ class TagLabel: UIView {
 
         NSLayoutConstraint.activate([
             //Add paddings to label container
-            label.topAnchor.constraint(equalTo: self.topAnchor, constant: 4),
+            label.topAnchor
+                .constraint(equalTo: self.topAnchor, constant: Spacing.xs),
             label.trailingAnchor
-                .constraint(equalTo: self.trailingAnchor, constant: -8),
+                .constraint(equalTo: self.trailingAnchor, constant: -Spacing.s),
             label.bottomAnchor
-                .constraint(equalTo: self.bottomAnchor, constant: -4),
+                .constraint(equalTo: self.bottomAnchor, constant: -Spacing.xs),
             label.leadingAnchor
-                .constraint(equalTo: self.leadingAnchor, constant: 8),
-
-            self.heightAnchor.constraint(equalToConstant: 36),
+                .constraint(equalTo: self.leadingAnchor, constant: Spacing.s),
         ])
         label.textAlignment = .center
         label.baselineAdjustment = .alignCenters
