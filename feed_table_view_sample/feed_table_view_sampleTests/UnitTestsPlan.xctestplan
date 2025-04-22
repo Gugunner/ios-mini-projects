@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "6C04A382-981F-44FC-9477-73C8BA2DE8B0",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:feed_table_view_sample.xcodeproj",
+        "identifier" : "4907E52F2DA69A1300FDC0EE",
+        "name" : "feed_table_view_sampleTests"
+      }
+    }
+  ],
+  "version" : 1
+}
