@@ -5,14 +5,6 @@
 //  Created by Raul_Alonzo on 09/04/25.
 //
 
-enum FeedableError: Error, Equatable {
-    case missingValues(_ values: String)
-    case cannotLoadFeed(_ message: String)
-    case undefinedType
-    case emptyFeed
-    case emptyFeeds
-}
-
 protocol FeedLoaderProtocol {
     var data: [FeedDatagram]? { get }
     var feeds: [FeedModel]? { get }
