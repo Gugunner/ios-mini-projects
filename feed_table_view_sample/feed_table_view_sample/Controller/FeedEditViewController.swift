@@ -10,13 +10,22 @@ import UIKit
 class FeedEditViewController: FeedScrollViewController, FeedConfigurable {
     let authorTextField = UITextField()
     let titleTextField = UITextField()
-    var messageDescription: UITextView? {
-        didSet { setUpViews() }
-    }
+    var messageDescription: UITextView?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpViews()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        createUserActivity()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        clearUserActivity()
+
     }
 
     func configure(with feed: FeedModel) {
@@ -61,11 +70,11 @@ extension FeedEditViewController {
 
         ]
 )
+        setTextView()
     }
 
     private func setTextView() {
         if let messageDescription = self.messageDescription {
-            print("Setting Message Description", messageDescription.text ?? "Nope")
             messageDescription.translatesAutoresizingMaskIntoConstraints = false
             messageDescription.isScrollEnabled = true
             messageDescription.textContainerInset = UIEdgeInsets(
@@ -115,5 +124,45 @@ extension FeedEditViewController: UITextFieldDelegate {
 extension FeedEditViewController: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         return true
+    }
+}
+
+
+//MARK: - Store and Restore State
+extension FeedEditViewController {
+    private func createUserActivity() {
+        let activity = NSUserActivity(activityType: "com.feed.editting")
+        activity.title = self.title
+        self.userActivity = activity
+        view.window?.windowScene?.userActivity = activity
+    }
+
+    override func updateUserActivityState(_ activity: NSUserActivity) {
+        super.updateUserActivityState(activity)
+        let entries:[AnyHashable:Any] = [
+            "author":authorTextField.text ?? "",
+            "title":titleTextField.text ?? "",
+            "messageDescription": messageDescription?.text ?? ""
+        ]
+        activity.addUserInfoEntries(from: entries)
+    }
+
+    private func clearUserActivity() {
+        if let activity = view.window?.windowScene?.userActivity {
+            activity.userInfo?.removeValue(forKey: "author")
+            activity.userInfo?.removeValue(forKey: "title")
+            activity.userInfo?.removeValue(forKey: "messageDescription")
+            self.userActivity?.resignCurrent()
+        }
+    }
+
+    //MARK: - Restores edit fields
+    func restore(from activity: NSUserActivity) {
+        authorTextField.text = "Author Test"
+        titleTextField.text = "Test"
+        if let messageDescription = activity.userInfo?["messageDescription"] as? String {
+            self.messageDescription = UITextView()
+            self.messageDescription?.text = messageDescription
+        }
     }
 }
