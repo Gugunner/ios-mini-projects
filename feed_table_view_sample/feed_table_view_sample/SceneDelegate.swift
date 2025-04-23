@@ -18,6 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         print("🔌 Connecting MainScene")
         guard let windowScene = scene as? UIWindowScene else { return }
         let window = UIWindow(windowScene: windowScene)
+        window.accessibilityIdentifier = "MainWindow"
         let rootVC = FeedTableViewController()
         window.rootViewController = UINavigationController(
             rootViewController: rootVC
