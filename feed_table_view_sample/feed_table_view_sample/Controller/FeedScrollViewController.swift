@@ -22,14 +22,12 @@ class FeedScrollViewController: UIViewController {
 extension FeedScrollViewController {
     private func setUpViews() {
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.backgroundColor = .white
 
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.backgroundColor = .white
         scrollView.addSubview(containerView)
 
         view.addSubview(scrollView)
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         NSLayoutConstraint.activate(
 [
             scrollView.topAnchor

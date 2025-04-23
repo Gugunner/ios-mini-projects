@@ -28,6 +28,7 @@ extension TextFeedDetailViewController {
         message.translatesAutoresizingMaskIntoConstraints = false
         message.lineBreakMode = .byWordWrapping
         message.numberOfLines = 0
+        message.textColor = .label
 
         containerView.addSubview(message)
 

@@ -43,5 +43,6 @@ class TagLabel: UIView {
         label.textAlignment = .center
         label.baselineAdjustment = .alignCenters
         label.numberOfLines = 0
+        label.textColor = .label
     }
 }
