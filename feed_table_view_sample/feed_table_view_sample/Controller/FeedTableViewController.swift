@@ -75,7 +75,7 @@ class FeedTableViewController: UIViewController, UITableViewDelegate, UITableVie
         if let feedCell = cell as? FeedTableViewCell {
             feedCell.configure(with: feed)
         }
-
+        cell.accessibilityIdentifier = "\(cellIdentifier)_\(indexPath.row)"
         if let textCell = cell as? TextFeedTableViewCell { return textCell }
 
         if let postCell = cell as? PostFeedTableViewCell { return postCell }
