@@ -32,6 +32,7 @@ extension PostFeedDetailViewController {
         feedDescription.numberOfLines = 0
         feedDescription.textAlignment = .justified
         feedDescription.lineBreakMode = .byWordWrapping
+        feedDescription.textColor = .label
 
         imageView.translatesAutoresizingMaskIntoConstraints = false
 

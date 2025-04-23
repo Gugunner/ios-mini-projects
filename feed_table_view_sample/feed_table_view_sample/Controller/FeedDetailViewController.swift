@@ -49,11 +49,13 @@ extension FeedDetailViewController {
         feedTitle.translatesAutoresizingMaskIntoConstraints = false
         feedTitle.numberOfLines = 2
         feedTitle.lineBreakMode = .byWordWrapping
+        feedTitle.textColor = .label
 
         createdAt.translatesAutoresizingMaskIntoConstraints = false
         createdAt.numberOfLines = 1
         createdAt.font = UIFont.systemFont(ofSize: 12)
         createdAt.textAlignment = .right
+        createdAt.textColor = .label
 
         editButton.translatesAutoresizingMaskIntoConstraints = false
 
