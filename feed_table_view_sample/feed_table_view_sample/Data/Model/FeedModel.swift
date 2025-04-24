@@ -21,8 +21,10 @@ protocol FeedProtocol {
     var type: FeedType { get set }
 }
 
-class FeedModel: FeedProtocol, Codable {
-    let identifier: UUID
+class FeedModel: FeedProtocol, DataContextIdModel {
+    static var modelKey: DataModelCodingKey = DataModelCodingKey.Feeds
+
+    var identifier: UUID
     var author: String
     var title: String
     var createdAt: Date
@@ -51,17 +53,20 @@ class FeedModel: FeedProtocol, Codable {
 
     //Decodes the model
     required init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: FeedModelCoderKeys.self)
+        let values = try decoder.container(keyedBy: FeedModelCodingKey.self)
         author = try values.decode(String.self, forKey: .author)
         title = try values.decode(String.self, forKey: .title)
         type = try values.decode(FeedType.self, forKey: .type)
         isoCreatedAt = try values.decode(String.self, forKey: .isoCreatedAt)
-        createdAt = try values.decode(Date.self, forKey: .createdAt)
+        createdAt = ISO8601DateFormatter().date(from: isoCreatedAt) ?? Date()
         let decodedIdentifier = try values.decode(
             String.self,
             forKey: .identifier
         )
-        identifier = UUID(uuidString: decodedIdentifier)!
+        guard let uuid = UUID(uuidString: decodedIdentifier) else {
+            throw FeedableError.unidentifiableFeed
+        }
+        identifier = uuid
     }
 
     func encode(to encoder: Encoder) throws {
@@ -69,7 +74,7 @@ class FeedModel: FeedProtocol, Codable {
     }
 }
 
-extension FeedModel: Hashable {
+extension FeedModel {
 
     static func == (lhs: FeedModel, rhs: FeedModel) -> Bool {
         return lhs.identifier == rhs.identifier
