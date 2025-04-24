@@ -15,50 +15,7 @@ class PostFeedDetailViewController: FeedDetailViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        feedDescription.translatesAutoresizingMaskIntoConstraints = false
-        feedDescription.numberOfLines = 0
-        feedDescription.textAlignment = .justified
-        feedDescription.lineBreakMode = .byWordWrapping
-
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-
-        view.addSubview(feedDescription)
-        view.addSubview(imageView)
-
-        NSLayoutConstraint.activate(
-[
-            feedDescription.topAnchor
-                .constraint(equalTo: feedTitle.bottomAnchor, constant: Spacing.xl),
-            feedDescription.trailingAnchor
-                .constraint(
-                    equalTo: containerView.trailingAnchor,
-                    constant: -Spacing
-                        .l),
-            feedDescription.leadingAnchor
-                .constraint(
-                    equalTo: containerView.leadingAnchor,
-                    constant: Spacing
-                        .l),
-
-            imageView.topAnchor
-                .constraint(
-                    equalTo: feedDescription.bottomAnchor,
-                    constant: Spacing
-                        .xl),
-            imageView.trailingAnchor
-                .constraint(
-                    equalTo: containerView.trailingAnchor,
-                    constant: -Spacing.l
-                ),
-            imageView.bottomAnchor
-                .constraint(equalTo: createdAt.topAnchor, constant: -Spacing.xl),
-            imageView.leadingAnchor
-                .constraint(
-                    equalTo: containerView.leadingAnchor,
-                    constant: Spacing
-                        .l),
-        ]
-)
+        setUpViews()
     }
 
     override func configure(with feed: FeedModel) {
@@ -66,5 +23,44 @@ class PostFeedDetailViewController: FeedDetailViewController {
         guard let postFeed = feed as? PostFeedModel else { return }
         feedDescription.text = postFeed.description
         imageView.configureImageFrom(name: postFeed.imagePath)
+    }
+}
+
+extension PostFeedDetailViewController {
+    private func setUpViews() {
+        feedDescription.translatesAutoresizingMaskIntoConstraints = false
+        feedDescription.numberOfLines = 0
+        feedDescription.textAlignment = .justified
+        feedDescription.lineBreakMode = .byWordWrapping
+        feedDescription.textColor = .label
+
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(feedDescription)
+        view.addSubview(imageView)
+        NSLayoutConstraint.activate(
+[
+            feedDescription.topAnchor
+                .constraint(equalTo: feedTitle.bottomAnchor, constant: Spacing.xl),
+            feedDescription.trailingAnchor
+                .constraint(
+                    equalTo: containerView.trailingAnchor),
+            feedDescription.leadingAnchor
+                .constraint(
+                    equalTo: containerView.leadingAnchor),
+
+            imageView.topAnchor
+                .constraint(
+                    equalTo: feedDescription.bottomAnchor),
+            imageView.trailingAnchor
+                .constraint(
+                    equalTo: containerView.trailingAnchor),
+            imageView.bottomAnchor
+                .constraint(equalTo: createdAt.topAnchor, constant: -Spacing.xl),
+            imageView.leadingAnchor
+                .constraint(
+                    equalTo: containerView.leadingAnchor),
+        ]
+)
     }
 }

@@ -6,9 +6,10 @@
 //
 
 import Foundation
+@testable import feed_table_view_sample
 
 class FeedLoaderSampleData {
-    static func createSampleData() -> [[String:String]] {
+    static func createSampleData() -> [FeedDatagram] {
         return (1...9).map() { v in
             if v % 2 == 0 {
                 return FeedLoaderSampleData.createSampleTextFeedDatagram(suffix: "\(v)")
@@ -17,23 +18,33 @@ class FeedLoaderSampleData {
         }
     }
 
-    static func createSampleTextFeedDatagram(suffix: String = "") -> [String:String] {
-        return ["author":"Tester\(suffix)", "title":"Simple Test \(suffix)",
-                "message":"A simple test message \(suffix)", "type":"text", "isoCreatedAt":"2025-04-09T14:30:51+0000"]
+    static func createSampleTextFeedDatagram(suffix: String = "") -> FeedDatagram {
+        return FeedDatagram(
+            author: "Tester\(suffix)",
+            title: "Simple Test \(suffix)",
+            type: "text",
+            isoCreatedAt: "2025-04-09T14:30:51+0000",
+            message: "A simple test message \(suffix)"
+        )
     }
 
-    static func createSamplePostFeedDatagram(suffix: String = "") -> [String:String] {
-        return ["author":"Tester\(suffix)", "title":"Simple Test \(suffix)",
-                "description":"Test description \(suffix)",
-                "imagePath":"testPath\(suffix)", "type":"post", "isoCreatedAt":"2025-04-09T14:30:51+0000"]
+    static func createSamplePostFeedDatagram(suffix: String = "") -> FeedDatagram {
+        return FeedDatagram(
+            author: "Tester\(suffix)",
+            title: "Simple Test \(suffix)",
+            type: "post",
+            isoCreatedAt: "2025-04-09T14:30:51+0000",
+            description: "Test description \(suffix)",
+            imagePath: "testPath\(suffix)"
+        )
     }
 
-    static func createSampleUnknowFeedDatagram() -> [String: String] {
-        return [
-            "author":"Unknown",
-            "title":"No title",
-            "type":"unknown",
-            "isoCreatedAt":Date().iSO8601Midnight
-        ]
+    static func createSampleUnknowFeedDatagram() -> FeedDatagram {
+        return FeedDatagram(
+            author: "Unknown",
+            title: "No title",
+            type: "unknown",
+            isoCreatedAt: Date().iSO8601Midnight
+        )
     }
 }

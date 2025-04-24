@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4944F1B82DB570A90014D4CE /* UnitTestsPlan.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 4944F1B72DB570A90014D4CE /* UnitTestsPlan.xctestplan */; };
+		49B6469F2DB87F64003DFB1A /* UITests.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 49B6469E2DB87F64003DFB1A /* UITests.xctestplan */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		4907E5312DA69A1300FDC0EE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +32,8 @@
 		4907E51A2DA69A1100FDC0EE /* feed_table_view_sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = feed_table_view_sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4907E5302DA69A1300FDC0EE /* feed_table_view_sampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = feed_table_view_sampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4907E53A2DA69A1300FDC0EE /* feed_table_view_sampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = feed_table_view_sampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4944F1B72DB570A90014D4CE /* UnitTestsPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = UnitTestsPlan.xctestplan; path = feed_table_view_sampleTests/UnitTestsPlan.xctestplan; sourceTree = "<group>"; };
+		49B6469E2DB87F64003DFB1A /* UITests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = UITests.xctestplan; path = feed_table_view_sampleUITests/UITests.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -88,6 +95,8 @@
 		4907E5112DA69A1100FDC0EE = {
 			isa = PBXGroup;
 			children = (
+				49B6469E2DB87F64003DFB1A /* UITests.xctestplan */,
+				4944F1B72DB570A90014D4CE /* UnitTestsPlan.xctestplan */,
 				4907E51C2DA69A1100FDC0EE /* feed_table_view_sample */,
 				4907E5332DA69A1300FDC0EE /* feed_table_view_sampleTests */,
 				4907E53D2DA69A1300FDC0EE /* feed_table_view_sampleUITests */,
@@ -225,6 +234,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4944F1B82DB570A90014D4CE /* UnitTestsPlan.xctestplan in Resources */,
+				49B6469F2DB87F64003DFB1A /* UITests.xctestplan in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

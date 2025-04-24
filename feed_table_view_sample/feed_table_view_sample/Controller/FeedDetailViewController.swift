@@ -7,11 +7,10 @@
 
 import UIKit
 
-class FeedDetailViewController: UIViewController, FeedConfigurable {
+class FeedDetailViewController: FeedScrollViewController, FeedConfigurable {
 
-    let containerView = UIView()
-    let scrollView = UIScrollView()
     var feed = FeedModel()
+    let editButton = UIButton(type: .system)
     let author = UILabel()
     let tagLabel = TagLabel()
     let headerStack = HeaderStackView()
@@ -20,97 +19,8 @@ class FeedDetailViewController: UIViewController, FeedConfigurable {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        //Configure header Stack
-        headerStack.setUpViews(leadView: author, trailView: tagLabel)
-        headerStack.translatesAutoresizingMaskIntoConstraints = false
-
-        feedTitle.translatesAutoresizingMaskIntoConstraints = false
-        feedTitle.numberOfLines = 2
-        feedTitle.lineBreakMode = .byWordWrapping
-
-        createdAt.translatesAutoresizingMaskIntoConstraints = false
-        createdAt.numberOfLines = 1
-        createdAt.font = UIFont.systemFont(ofSize: 12)
-        createdAt.textAlignment = .right
-
-        //Configure a super view that groups all content
-        containerView.addSubview(headerStack)
-        containerView.addSubview(feedTitle)
-        containerView.addSubview(createdAt)
-        containerView.layer.backgroundColor = UIColor.white.cgColor
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.addSubview(containerView)
-
-        //Add the container view and pass on a background color
-        view.addSubview(scrollView)
-        view.layer.backgroundColor = UIColor.white.cgColor
-        
-        NSLayoutConstraint.activate(
-[
-            //Paddings
-            scrollView.topAnchor
-                .constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor
-                .constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor
-                .constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-
-            containerView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            containerView.trailingAnchor
-                .constraint(equalTo: scrollView.trailingAnchor),
-            containerView.bottomAnchor
-                .constraint(equalTo: scrollView.bottomAnchor),
-            containerView.leadingAnchor
-                .constraint(equalTo: scrollView.leadingAnchor),
-            containerView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-
-            headerStack.topAnchor
-                .constraint(
-                    equalTo: containerView.topAnchor,
-                    constant: Spacing
-                        .xl),
-            headerStack.trailingAnchor
-                .constraint(
-                    equalTo: containerView.trailingAnchor,
-                    constant: -Spacing
-                        .l),
-            headerStack.leadingAnchor
-                .constraint(
-                    equalTo: containerView.leadingAnchor,
-                    constant: Spacing
-                        .l),
-
-            feedTitle.topAnchor
-                .constraint(
-                    equalTo: headerStack.bottomAnchor,
-                    constant: Spacing
-                        .xl),
-            feedTitle.trailingAnchor
-                .constraint(
-                    equalTo: containerView.trailingAnchor,
-                    constant: -Spacing
-                        .l),
-            feedTitle.leadingAnchor
-                .constraint(
-                    equalTo: containerView.leadingAnchor,
-                    constant: Spacing
-                        .l),
-
-            createdAt.bottomAnchor
-                .constraint(
-                    equalTo: containerView.bottomAnchor,
-                    constant: -Spacing
-                        .xl),
-            createdAt.trailingAnchor
-                .constraint(
-                    equalTo: containerView.trailingAnchor,
-                    constant: -Spacing
-                        .l),
-        ]
-)
+        setUpViews()
+        setUpActions()
     }
 
     func configure(with feed: FeedModel) {
@@ -127,5 +37,90 @@ class FeedDetailViewController: UIViewController, FeedConfigurable {
         dateFormatter.timeStyle = .medium
         dateFormatter.locale = Locale(identifier: "en_US")
         return dateFormatter.string(from: date)
+    }
+}
+
+extension FeedDetailViewController {
+    private func setUpViews() {
+        //Configure header Stack
+        headerStack.setUpViews(leadView: author, trailView: tagLabel)
+        headerStack.translatesAutoresizingMaskIntoConstraints = false
+
+        feedTitle.translatesAutoresizingMaskIntoConstraints = false
+        feedTitle.numberOfLines = 2
+        feedTitle.lineBreakMode = .byWordWrapping
+        feedTitle.textColor = .label
+
+        createdAt.translatesAutoresizingMaskIntoConstraints = false
+        createdAt.numberOfLines = 1
+        createdAt.font = UIFont.systemFont(ofSize: 12)
+        createdAt.textAlignment = .right
+        createdAt.textColor = .label
+
+        editButton.translatesAutoresizingMaskIntoConstraints = false
+
+        //Configure a super view that groups all content
+        containerView.addSubview(headerStack)
+        containerView.addSubview(feedTitle)
+        containerView.addSubview(createdAt)
+        containerView.addSubview(editButton)
+        NSLayoutConstraint.activate(
+[
+            headerStack.topAnchor
+                .constraint(
+                    equalTo: containerView.topAnchor),
+            headerStack.trailingAnchor
+                .constraint(
+                    equalTo: containerView.trailingAnchor),
+            headerStack.leadingAnchor
+                .constraint(
+                    equalTo: containerView.leadingAnchor),
+
+            feedTitle.topAnchor
+                .constraint(
+                    equalTo: headerStack.bottomAnchor),
+            feedTitle.trailingAnchor
+                .constraint(
+                    equalTo: containerView.trailingAnchor),
+            feedTitle.leadingAnchor
+                .constraint(
+                    equalTo: containerView.leadingAnchor),
+
+            createdAt.bottomAnchor
+                .constraint(
+                    equalTo: containerView.bottomAnchor),
+            createdAt.trailingAnchor
+                .constraint(
+                    equalTo: containerView.trailingAnchor),
+
+            editButton.bottomAnchor
+                .constraint(
+                    equalTo: containerView.bottomAnchor),
+            editButton.leadingAnchor
+                .constraint(equalTo: containerView.leadingAnchor)
+        ]
+)
+    }
+}
+
+//MARK: - Actions
+extension FeedDetailViewController {
+
+    private func setUpActions() {
+        editButton
+            .setTitle(NSLocalizedString("Edit", comment: ""), for: .normal)
+        editButton
+            .addTarget(
+                self,
+                action: #selector(onEditFeed(_:)),
+                for: .touchUpInside
+            )
+    }
+
+    @objc func onEditFeed(_ sender: UIButton) {
+        guard let navigationController = self.navigationController else { return }
+        let editVC = FeedEditViewController()
+        editVC.configure(with: feed)
+        navigationController.pushViewController(editVC, animated: true)
     }
 }
