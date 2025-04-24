@@ -1,11 +1,11 @@
 //
-//  FeedModelCoderKeys.swift
+//  FeedModelCodingKey.swift
 //  feed_table_view_sample
 //
 //  Created by Raul_Alonzo on 23/04/25.
 //
 
-enum FeedModelCoderKeys: String, CodingKey {
+enum FeedModelCodingKey: String, CodingKey {
     case identifier
     case author
     case title
