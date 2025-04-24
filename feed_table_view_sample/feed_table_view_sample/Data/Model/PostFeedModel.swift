@@ -23,14 +23,14 @@ class PostFeedModel: FeedModel {
     }
 
     required init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: FeedModelCoderKeys.self)
+        let values = try decoder.container(keyedBy: FeedModelCodingKey.self)
         imagePath = try values.decode(String.self, forKey: .imagePath)
         description = try values.decode(String.self, forKey: .description)
         try super.init(from: decoder)
     }
 
     override func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: FeedModelCoderKeys.self)
+        var container = encoder.container(keyedBy: FeedModelCodingKey.self)
         try container.encode(identifier, forKey: .identifier)
         try container.encode(author, forKey: .author)
         try container.encode(title, forKey: .title)
