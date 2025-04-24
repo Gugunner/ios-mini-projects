@@ -11,10 +11,6 @@ class FakeFeedLoader: FeedLoaderProtocol {
     var data: [FeedDatagram]?
     var feeds: [FeedModel]?
 
-    let feedModelFields = ["author","title","type","isoCreatedAt"]
-    let textFeedModelFields = ["message"]
-    let postFeedModelFields = ["imagePath","description"]
-
     func loadData() async throws {
         let json: [[String: Any]] = dataSample
         let decoder = JSONDecoder()
@@ -64,11 +60,16 @@ class FakeFeedLoader: FeedLoaderProtocol {
     //MARK: - Logic to verify datagram fields
 
     func checkFeedInDict(_ datagram: FeedDatagram) throws {
+        if datagram.identifier.isEmpty || UUID(uuidString: datagram.identifier) == nil {
+            throw FeedableError.unidentifiableFeed
+        }
+
         if datagram.type.isEmpty {
             throw FeedableError.undefinedType
         }
 
         var errors: [String] = []
+
         if datagram.author.isEmpty {
             errors.append("author")
         }
@@ -116,7 +117,11 @@ class FakeFeedLoader: FeedLoaderProtocol {
     }
 
     func loadTextFeed(_ textDatagram: FeedDatagram) -> FeedModel? {
+        guard let uuid = UUID(uuidString: textDatagram.identifier) else {
+            return nil
+        }
         return TextFeedModel(
+            identifier: uuid,
             author: textDatagram.author,
             title: textDatagram.title,
             message: textDatagram.message ?? "",
@@ -126,7 +131,11 @@ class FakeFeedLoader: FeedLoaderProtocol {
     }
 
     func loadPostFeed(_ postDatagram: FeedDatagram) -> FeedModel? {
+        guard let uuid = UUID(uuidString: postDatagram.identifier) else {
+            return nil
+        }
         return PostFeedModel(
+            identifier: uuid,
             author: postDatagram.author,
             title: postDatagram.title,
             imagePath: postDatagram.imagePath ?? "",
