@@ -8,7 +8,9 @@
 enum FeedableError: Error, Equatable {
     case missingValues(_ values: String)
     case cannotLoadFeed(_ message: String)
+    case unidentifiableFeed
     case undefinedType
     case emptyFeed
     case emptyFeeds
+    case notEncodable
 }
