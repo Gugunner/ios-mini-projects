@@ -18,8 +18,9 @@ class FeedLoaderSampleData {
         }
     }
 
-    static func createSampleTextFeedDatagram(suffix: String = "") -> FeedDatagram {
+    static func createSampleTextFeedDatagram(suffix: String = "0") -> FeedDatagram {
         return FeedDatagram(
+            identifier: "E09FFBD4-318F-46EE-8FA2-FA387D4F356\(suffix)",
             author: "Tester\(suffix)",
             title: "Simple Test \(suffix)",
             type: "text",
@@ -28,8 +29,9 @@ class FeedLoaderSampleData {
         )
     }
 
-    static func createSamplePostFeedDatagram(suffix: String = "") -> FeedDatagram {
+    static func createSamplePostFeedDatagram(suffix: String = "0") -> FeedDatagram {
         return FeedDatagram(
+            identifier: "E09FFBD4-318F-46EE-8FA2-FA387D4F356\(suffix)",
             author: "Tester\(suffix)",
             title: "Simple Test \(suffix)",
             type: "post",
@@ -41,6 +43,7 @@ class FeedLoaderSampleData {
 
     static func createSampleUnknowFeedDatagram() -> FeedDatagram {
         return FeedDatagram(
+            identifier: "E09FFBD4-318F-46EE-8FA2-FA387D4F3567",
             author: "Unknown",
             title: "No title",
             type: "unknown",

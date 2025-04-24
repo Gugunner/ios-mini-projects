@@ -7,6 +7,7 @@
 
 let dataSample: [[String:String]] = [
     [
+        "identifier": "E09FFBD4-318F-46EE-8FA2-FA387D4F3562",
         "author": "Camry Toyota",
         "title": "A good message for you",
         "message": "Hello if you read this I hope you are learning swift and growing as an iOS developer.",
@@ -14,6 +15,7 @@ let dataSample: [[String:String]] = [
         "isoCreatedAt": "2025-04-09T14:30:51+0000"
     ],
     [
+        "identifier": "E09FFBD4-318F-46EE-8FA2-FA387D4F3563",
         "author": "Endeavor Mitsubishi",
         "title": "The car of a decade",
         "imagePath": "sample",
@@ -22,6 +24,7 @@ let dataSample: [[String:String]] = [
         "isoCreatedAt": "2025-04-09T14:30:51+0000"
     ],
     [
+        "identifier": "E09FFBD4-318F-46EE-8FA2-FA387D4F3564",
         "author": "HRV Honda",
         "title": "Honda was a samurai clan",
         "message": "The Honda clan rose to power and were lords of Himeji Castle in the 1600s",
@@ -29,6 +32,7 @@ let dataSample: [[String:String]] = [
         "isoCreatedAt": "2025-04-09T14:30:51+0000"
     ],
     [
+        "identifier": "E09FFBD4-318F-46EE-8FA2-FA387D4F3565",
         "author": "Tsuru Nissan",
         "title": "One of the most sold cars in the mexican market",
         "imagePath": "sample",
