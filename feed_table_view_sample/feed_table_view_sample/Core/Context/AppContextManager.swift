@@ -26,3 +26,10 @@ class AppContextManager {
         AppContextManager.app.context = context
     }
 }
+
+extension AppContextManager {
+    //Used to clear current app context only call when resetting context
+    func clearContext() {
+        context = nil
+    }
+}

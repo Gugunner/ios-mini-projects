@@ -12,6 +12,7 @@ final class AppContextManagerTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
+        AppContextManager.app.clearContext()
     }
 
     override func tearDownWithError() throws {
@@ -19,8 +20,8 @@ final class AppContextManagerTests: XCTestCase {
     }
 
     func testAppContextManagerConfiguresWithMockAppContext() throws {
-        AppContextManager.app.configure(with: MockAppContext())
-        XCTAssertTrue(AppContextManager.app.shared is MockAppContext)
+        AppContextManager.app.configure(with: FakeAppContext())
+        XCTAssertTrue(AppContextManager.app.shared is FakeAppContext)
     }
 
     func testAppContextManagerFailsIfNotConfigured() throws {

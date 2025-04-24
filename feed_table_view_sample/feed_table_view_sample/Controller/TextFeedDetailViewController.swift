@@ -13,9 +13,22 @@ class TextFeedDetailViewController: FeedDetailViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUpViews()
+    }
+
+    override func configure(with feed: FeedModel) {
+        super.configure(with: feed)
+        guard let textFeed =  feed as? TextFeedModel else { return }
+        message.text = textFeed.message
+    }
+}
+
+extension TextFeedDetailViewController {
+    private func setUpViews() {
         message.translatesAutoresizingMaskIntoConstraints = false
         message.lineBreakMode = .byWordWrapping
         message.numberOfLines = 0
+        message.textColor = .label
 
         containerView.addSubview(message)
 
@@ -25,21 +38,11 @@ class TextFeedDetailViewController: FeedDetailViewController {
                 .constraint(equalTo: feedTitle.bottomAnchor, constant: Spacing.xl),
             message.trailingAnchor
                 .constraint(
-                    equalTo: containerView.trailingAnchor,
-                    constant: -Spacing
-                        .l),
+                    equalTo: containerView.trailingAnchor),
             message.leadingAnchor
                 .constraint(
-                    equalTo: containerView.leadingAnchor,
-                    constant: Spacing
-                        .l),
+                    equalTo: containerView.leadingAnchor),
         ]
 )
-    }
-
-    override func configure(with feed: FeedModel) {
-        super.configure(with: feed)
-        guard let textFeed =  feed as? TextFeedModel else { return }
-        message.text = textFeed.message
     }
 }
