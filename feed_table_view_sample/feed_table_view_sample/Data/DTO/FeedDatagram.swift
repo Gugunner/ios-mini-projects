@@ -6,6 +6,7 @@
 //
 
 struct FeedDatagram: Decodable {
+    let identifier: String
     let author: String
     let title: String
     let type: String
@@ -15,6 +16,7 @@ struct FeedDatagram: Decodable {
     var imagePath: String?
 
     func copy(
+        identifier: String? = nil,
         author: String? = nil,
         title: String? = nil,
         type: String? = nil,
@@ -24,6 +26,7 @@ struct FeedDatagram: Decodable {
         imagePath: String? = nil
     ) -> FeedDatagram {
         return FeedDatagram(
+            identifier: identifier ?? self.identifier,
             author: author ?? self.author,
             title: title ?? self.title,
             type: type ?? self.type,
