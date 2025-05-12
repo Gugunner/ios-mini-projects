@@ -6,12 +6,17 @@
 //
 
 import UIKit
+import Foundation
+import Combine
 
 class ViewController: UIViewController {
 
     let headerStack = UIStackView()
     let titleLabel = UILabel()
     let table = UITableView()
+    let viewModel = ChatViewModel()
+    var subscriber: AnyCancellable?
+    let textArea = UITextView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,6 +24,28 @@ class ViewController: UIViewController {
         setHeader()
         setTableView()
         setConstraints()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print("View appeared")
+        subscriber = viewModel.$messages
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] message in
+                guard let self, self.viewModel.messages.count > 0 else  {return }
+
+                let newIndexPath = IndexPath(row: self.viewModel.messages.count - 1, section: 0)
+                print("Adding message to table")
+                self.table.insertRows(at: [newIndexPath], with: .automatic)
+        })
+        viewModel.startStream()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        print("View Disappeared")
+        subscriber?.cancel()
+        viewModel.stopStream()
+        super.viewDidDisappear(animated)
     }
 
     private func setTableView() {
@@ -105,7 +132,8 @@ extension ViewController: UITableViewDelegate {
 
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 20
+        print("Rows count:",viewModel.messages.count)
+        return viewModel.messages.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -113,10 +141,15 @@ extension ViewController: UITableViewDataSource {
             withIdentifier: "Cell",
             for: indexPath
         )
+        guard indexPath.row < viewModel.messages.count else {
+            return UITableViewCell()
+        }
 
         var contentConfiguration = UIListContentConfiguration.cell()
-        contentConfiguration.text = "Primary \(indexPath.row) ->"
-        contentConfiguration.secondaryText = "Secondary"
+        let message = viewModel
+            .messages[indexPath.row]
+        contentConfiguration.text = message.primaryText
+        contentConfiguration.secondaryText = message.secondaryText
         cell.selectionStyle = .none
         cell.contentConfiguration = contentConfiguration
         return cell
