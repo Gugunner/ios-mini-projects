@@ -39,6 +39,8 @@ class ViewController: UIViewController {
                 let newIndexPath = IndexPath(row: self.viewModel.messages.count - 1, section: 0)
                 print("Adding message to table")
                 self.table.insertRows(at: [newIndexPath], with: .automatic)
+                self.table
+                    .scrollToRow(at: newIndexPath, at: .bottom, animated: true)
         })
         viewModel.startStream()
     }
