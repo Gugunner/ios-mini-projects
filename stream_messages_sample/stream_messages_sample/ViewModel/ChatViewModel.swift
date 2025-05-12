@@ -45,6 +45,10 @@ class ChatViewModel: ObservableObject {
         hasStarted = false
     }
 
+    func send(message: Message) {
+        userUpdates.send(message)
+    }
+
     private func loadFromNetwork() async {
         let stream = networkStream()
         for await res in stream {
@@ -62,7 +66,7 @@ class ChatViewModel: ObservableObject {
             Task {
                 while count <= 50 {
                     try await Task.sleep(nanoseconds: 2_000_000_000)
-                    let message = Message(id: count, primaryText: "Primary -> \(count)", secondaryText: "Secondary")
+                    let message = Message(id: count, primaryText: "Remote -> \(count)", secondaryText: "Network Message")
                     continuation.yield(.success(message))
                     count += 1
                 }
