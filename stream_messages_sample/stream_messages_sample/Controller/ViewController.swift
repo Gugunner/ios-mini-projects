@@ -16,13 +16,15 @@ class ViewController: UIViewController {
     let table = UITableView()
     let viewModel = ChatViewModel()
     var subscriber: AnyCancellable?
-    let textArea = UITextView()
+    let sendButton = UIButton(type: .custom)
+    var count = 1
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         setHeader()
         setTableView()
+        setButton()
         setConstraints()
     }
 
@@ -74,9 +76,26 @@ class ViewController: UIViewController {
         headerStack.spacing = 8
     }
 
+    private func setButton()  {
+        sendButton.setTitle("Send", for: .normal)
+        sendButton
+            .addTarget(
+                self,
+                action: #selector(sendUserMessage),
+                for: .touchUpInside
+            )
+        sendButton.translatesAutoresizingMaskIntoConstraints = false
+        sendButton.backgroundColor = .white
+        sendButton.setTitleColor(.black, for: .normal)
+        sendButton.layer.cornerRadius = 8
+        sendButton.layer.borderColor = UIColor.black.cgColor
+        sendButton.layer.borderWidth = 1
+    }
+
     private func setConstraints() {
         view.addSubview(headerStack)
         view.addSubview(table)
+        view.addSubview(sendButton)
         view.backgroundColor = .white
         NSLayoutConstraint.activate(
 [
@@ -110,7 +129,27 @@ class ViewController: UIViewController {
                     equalTo: view.safeAreaLayoutGuide.leadingAnchor,
                     constant: 16
                 ),
-            table.bottomAnchor
+//            table.bottomAnchor
+//                .constraint(
+//                    equalTo: sendButton.topAnchor,
+//                    constant: -20
+//                ),
+
+            //UIButton
+            sendButton.topAnchor
+                .constraint(equalTo: table.bottomAnchor, constant: 20),
+            sendButton.leadingAnchor
+                .constraint(
+                    equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                    constant: 16
+                ),
+            sendButton.widthAnchor.constraint(equalToConstant: 80),
+//            sendButton.trailingAnchor
+//                .constraint(
+//                    equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+//                    constant: -16
+//                ),
+            sendButton.bottomAnchor
                 .constraint(
                     equalTo: view.safeAreaLayoutGuide.bottomAnchor,
                     constant: -20
@@ -153,5 +192,14 @@ extension ViewController: UITableViewDataSource {
         cell.selectionStyle = .none
         cell.contentConfiguration = contentConfiguration
         return cell
+    }
+}
+
+extension ViewController {
+    @objc func sendUserMessage() {
+        let message = Message(id: count, primaryText: "User -> \(count)", secondaryText: "Local Message")
+        print("Send user message")
+        viewModel.send(message: message)
+        count += 1
     }
 }
