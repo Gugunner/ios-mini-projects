@@ -139,11 +139,6 @@ class ViewController: UIViewController {
                     constant: 16
                 ),
             sendButton.widthAnchor.constraint(equalToConstant: 80),
-//            sendButton.trailingAnchor
-//                .constraint(
-//                    equalTo: view.safeAreaLayoutGuide.trailingAnchor,
-//                    constant: -16
-//                ),
             sendButton.bottomAnchor
                 .constraint(
                     equalTo: view.safeAreaLayoutGuide.bottomAnchor,
