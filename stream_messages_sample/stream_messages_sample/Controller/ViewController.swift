@@ -129,11 +129,6 @@ class ViewController: UIViewController {
                     equalTo: view.safeAreaLayoutGuide.leadingAnchor,
                     constant: 16
                 ),
-//            table.bottomAnchor
-//                .constraint(
-//                    equalTo: sendButton.topAnchor,
-//                    constant: -20
-//                ),
 
             //UIButton
             sendButton.topAnchor
