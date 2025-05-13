@@ -9,7 +9,7 @@ class UserRepository {
 
     let coreDataStack = CoreDataStack.shared
 
-    func storeUser(user: UserModel) async throws -> Result<Bool, CoreDataError>{
+    func storeUser(user: UserModel) async -> Result<Bool, CoreDataError>{
         do {
             try coreDataStack.save(user: user)
             return .success(true)
