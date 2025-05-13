@@ -34,7 +34,7 @@ class ViewController: UIViewController {
         subscriber = viewModel.$messages
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] message in
-                guard let self, self.viewModel.messages.count > 0 else  {return }
+                guard let self, self.viewModel.messages.count > 0 else  { return }
 
                 let newIndexPath = IndexPath(row: self.viewModel.messages.count - 1, section: 0)
                 print("Adding message to table")
