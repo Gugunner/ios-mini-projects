@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  FormViewController.swift
 //  local_persistence_form_sample
 //
 //  Created by Raul_Alonzo on 13/05/25.
@@ -7,14 +7,16 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class FormViewController: UIViewController {
 
     let titleLabel = UILabel()
     let userNameField = UITextField()
     let emailField = UITextField()
+    let alertLabel = UILabel()
     let submitButton = UIButton()
     let submitSpinner = UIActivityIndicatorView(style: .medium)
 
+    var repository: UserRepository!
     var submitting = false
 
     override func viewDidLoad() {
@@ -22,6 +24,7 @@ class ViewController: UIViewController {
         setTitle()
         setUserNameField()
         setEmailField()
+        setAlertLabel()
         setSubmitButton()
         setConstraints()
     }
@@ -37,20 +40,9 @@ class ViewController: UIViewController {
     private func setUserNameField() {
         userNameField.delegate = self
         userNameField.placeholder = "Username"
-        let image = UIImage(systemName: "person")
-        let imageView = UIImageView(image: image)
-        imageView.tintColor = .black
-        imageView.contentMode = .center
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: 32, height: 32))
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.addSubview(imageView)
-        NSLayoutConstraint.activate([
-                imageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
-                imageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
-                imageView.topAnchor.constraint(equalTo: containerView.topAnchor),
-                imageView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
-            ])
+        userNameField.restorationIdentifier = "username"
+        userNameField.textContentType = .username
+        let containerView = setTextFieldIcon(with: "person")
         userNameField.leftView = containerView
         userNameField.leftViewMode = .always
         userNameField.borderStyle = .line
@@ -63,7 +55,19 @@ class ViewController: UIViewController {
         emailField.delegate = self
         emailField.placeholder = "email"
         emailField.keyboardType = .emailAddress
-        let image = UIImage(systemName: "paperplane")
+        emailField.textContentType = .emailAddress
+        emailField.restorationIdentifier = "email"
+        let containerView = setTextFieldIcon(with: "paperplane")
+        emailField.leftView = containerView
+        emailField.leftViewMode = .always
+        emailField.borderStyle = .line
+        emailField.textAlignment = .left
+        emailField.becomeFirstResponder()
+        emailField.translatesAutoresizingMaskIntoConstraints = false
+    }
+
+    private func setTextFieldIcon(with systemName: String) -> UIView {
+        let image = UIImage(systemName: systemName)
         let imageView = UIImageView(image: image)
         imageView.tintColor = .black
         imageView.contentMode = .center
@@ -77,12 +81,16 @@ class ViewController: UIViewController {
                 imageView.topAnchor.constraint(equalTo: containerView.topAnchor),
                 imageView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
             ])
-        emailField.leftView = containerView
-        emailField.leftViewMode = .always
-        emailField.borderStyle = .line
-        emailField.textAlignment = .left
-        emailField.becomeFirstResponder()
-        emailField.translatesAutoresizingMaskIntoConstraints = false
+        return containerView
+    }
+
+    private func setAlertLabel() {
+        alertLabel.textColor = .black
+        alertLabel.textAlignment = .left
+        alertLabel.numberOfLines = 1
+        alertLabel.lineBreakMode = .byWordWrapping
+        alertLabel.translatesAutoresizingMaskIntoConstraints = false
+        alertLabel.isHidden = true
     }
 
     private func setSubmitButton() {
@@ -109,6 +117,7 @@ class ViewController: UIViewController {
         view.addSubview(titleLabel)
         view.addSubview(userNameField)
         view.addSubview(emailField)
+        view.addSubview(alertLabel)
         view.addSubview(submitButton)
         view.backgroundColor = .white
         NSLayoutConstraint.activate(
@@ -159,9 +168,23 @@ class ViewController: UIViewController {
                 ),
             emailField.heightAnchor.constraint(equalToConstant: 40),
 
+            //UILabel
+            alertLabel.topAnchor
+                .constraint(equalTo: emailField.bottomAnchor, constant: 20),
+            alertLabel.trailingAnchor
+                .constraint(
+                    equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                    constant: -16
+                ),
+            alertLabel.leadingAnchor
+                .constraint(
+                    equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                    constant: 16
+                ),
+
             //UIButton
             submitButton.topAnchor
-                .constraint(equalTo: emailField.bottomAnchor, constant: 28),
+                .constraint(equalTo: alertLabel.bottomAnchor, constant: 20),
             submitButton.trailingAnchor
                 .constraint(
                     equalTo: view.safeAreaLayoutGuide.trailingAnchor,
@@ -178,10 +201,22 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: UITextFieldDelegate {
+extension FormViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         print("Prev:", textField.text ?? "", "Next:",string)
-        return true
+        if !alertLabel.isHidden {
+            clearAlertLabel()
+        }
+        if textField.restorationIdentifier != "email" {
+            return true
+        }
+        guard let currentText = textField.text as NSString? else { return true }
+        let updatedText = currentText.replacingCharacters(
+            in: range,
+            with: string.lowercased()
+        )
+        textField.text = updatedText
+        return false
     }
 
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
@@ -190,8 +225,8 @@ extension ViewController: UITextFieldDelegate {
     }
 }
 
-extension ViewController {
 
+extension FormViewController {
     private func configSpinner() {
         if (submitting) {
             submitButton.addSubview(submitSpinner)
@@ -220,14 +255,68 @@ extension ViewController {
 
     @MainActor
     @objc func storeUser() {
+        assert(repository != nil, "repository must be injected")
         //TODO: Add logic to send user to user repository
+        //TODO Validate textFields
+        guard let userName = userNameField.text, let email = emailField.text, userName.count > 4, email.count > 4 else {
+            return
+        }
         print("Storing user")
+        userNameField.resignFirstResponder()
+        emailField.resignFirstResponder()
         Task {
             submitting = true
             configSubmitButton()
+            let user = UserModel(
+                id: UUID(),
+                userName: userName,
+                email: email
+            )
             try await Task.sleep(nanoseconds: 2_000_000_000)
+            let result = await repository.storeUser(user: user)
+            switch (result) {
+                case .success(let val):
+                if val {
+                    clearFields()
+                    processSuccess(user)
+                }
+                case .failure(let error):
+                    processError(error)
+                }
+            alertLabel.isHidden = false
             submitting = false
             configSubmitButton()
         }
+    }
+
+    private func processSuccess(_ user: UserModel) {
+        alertLabel.text = "User \(user.userName) was created!"
+        alertLabel.textColor = .green
+    }
+
+    private func processError(_ error: CoreDataError) {
+        var errorText: String
+        switch (error) {
+        case .alreadyExists:
+            errorText = "The username or email are already in use."
+        case .cannotStore:
+            errorText = "We cannot store the user at this moment."
+        default:
+            errorText = "An unknown error occured."
+        }
+        alertLabel.text = errorText
+        alertLabel.textColor = .red
+        print("User Failed to store")
+    }
+
+    private func clearFields() {
+        userNameField.text = nil
+        emailField.text = nil
+    }
+
+    private func clearAlertLabel() {
+        alertLabel.text = nil
+        alertLabel.textColor = .black
+        alertLabel.isHidden = true
     }
 }
