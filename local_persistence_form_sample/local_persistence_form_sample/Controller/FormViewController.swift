@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+//TODO: Add AppState for users stored and coordinate with CoreData for validation and context save via AppDelegate
 class FormViewController: UIViewController {
 
     let titleLabel = UILabel()
@@ -34,6 +34,7 @@ class FormViewController: UIViewController {
         titleLabel.numberOfLines = 1
         titleLabel.lineBreakMode = .byWordWrapping
         titleLabel.textAlignment = .center
+        titleLabel.textColor = .black
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
     }
 
@@ -47,6 +48,7 @@ class FormViewController: UIViewController {
         userNameField.leftViewMode = .always
         userNameField.borderStyle = .line
         userNameField.textAlignment = .left
+        userNameField.textColor = .black
         userNameField.becomeFirstResponder()
         userNameField.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -62,6 +64,7 @@ class FormViewController: UIViewController {
         emailField.leftViewMode = .always
         emailField.borderStyle = .line
         emailField.textAlignment = .left
+        emailField.textColor = .black
         emailField.becomeFirstResponder()
         emailField.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -225,8 +228,18 @@ extension FormViewController: UITextFieldDelegate {
     }
 }
 
-
+// MARK: - UI Submitting
 extension FormViewController {
+    private func resignResponders() {
+        if userNameField.isFirstResponder {
+            userNameField.resignFirstResponder()
+        }
+
+        if emailField.isFirstResponder {
+            emailField.resignFirstResponder()
+        }
+    }
+
     private func configSpinner() {
         if (submitting) {
             submitButton.addSubview(submitSpinner)
@@ -252,18 +265,22 @@ extension FormViewController {
             .withAlphaComponent(0.25).cgColor : UIColor.black.cgColor
         configSpinner()
     }
+}
 
+// MARK: - User CoreData Storage
+extension FormViewController {
+
+    //Must run in main since it calls UI changes
     @MainActor
     @objc func storeUser() {
         assert(repository != nil, "repository must be injected")
-        //TODO: Add logic to send user to user repository
         //TODO Validate textFields
         guard let userName = userNameField.text, let email = emailField.text, userName.count > 4, email.count > 4 else {
             return
         }
-        print("Storing user")
-        userNameField.resignFirstResponder()
-        emailField.resignFirstResponder()
+        resignResponders()
+
+
         Task {
             submitting = true
             configSubmitButton()
@@ -272,7 +289,9 @@ extension FormViewController {
                 userName: userName,
                 email: email
             )
+            //Simulate async call
             try await Task.sleep(nanoseconds: 2_000_000_000)
+            print("Storing user")
             let result = await repository.storeUser(user: user)
             switch (result) {
                 case .success(let val):
