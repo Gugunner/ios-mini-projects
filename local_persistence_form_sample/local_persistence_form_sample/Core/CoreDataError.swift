@@ -9,5 +9,6 @@ enum CoreDataError: String, Error {
     case alreadyExists
     case notFound
     case cannotStore
+    case cannotDelete
     case unknown
 }
