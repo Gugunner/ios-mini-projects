@@ -8,11 +8,12 @@
 
 extension UserEntity {
     var model: UserModel? {
-        guard let id, let userName, let email else { return nil }
+        guard let id, let userName, let email, let timestamp else { return nil }
         return UserModel(
             id: id,
             userName: userName,
-            email: email
+            email: email,
+            timestamp: timestamp
         )
     }
 }
