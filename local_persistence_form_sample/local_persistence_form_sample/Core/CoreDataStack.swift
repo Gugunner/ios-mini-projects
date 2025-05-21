@@ -10,6 +10,8 @@ import CoreData
 
 class CoreDataStack {
 
+    private static let lastCleanedKey = "lastCleaned"
+
     static let shared = CoreDataStack()
 
     lazy var persistentContainer: NSPersistentContainer = {
@@ -26,7 +28,25 @@ class CoreDataStack {
         return container
     }()
 
+    var lastCleaned: Date? {
+        get {
+            return UserDefaults.standard.object(forKey: CoreDataStack.lastCleanedKey) as? Date
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: CoreDataStack.lastCleanedKey)
+        }
+    }
+
     private init() { }
+
+    func newBackgroundContext() -> NSManagedObjectContext {
+        let backgroundContext = persistentContainer.newBackgroundContext()
+        backgroundContext.automaticallyMergesChangesFromParent = true
+        backgroundContext.mergePolicy = NSMergePolicy(
+            merge: NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType
+        )
+        return backgroundContext
+    }
 }
 
 extension CoreDataStack {
@@ -42,24 +62,31 @@ extension CoreDataStack {
         }
     }
 
-    func delete(item: NSManagedObject) {
-        let objectID = item.objectID
-
-        persistentContainer.performBackgroundTask { context in
-            do {
-                if let backgroundObject = try? context.existingObject(
-                    with: objectID
-                ) {
-                    context.delete(backgroundObject)
-                    try context.save()
+    func delete(item: NSManagedObject) async -> Result<Bool, Error> {
+        return await withCheckedContinuation { continuation in
+            let objectID = item.objectID
+            persistentContainer.performBackgroundTask { context in
+                do {
+                    if let backgroundObject = try? context.existingObject(
+                        with: objectID
+                    ) {
+                        print("Deleting item \(objectID)")
+                        context.delete(backgroundObject)
+                        try context.save()
+                        continuation.resume(returning: .success(true))
+                    } else {
+                        continuation.resume(returning: .success(false))
+                    }
+                } catch {
+                    print("Cannot delete background object:", error)
+                    continuation.resume(returning: .failure(error))
                 }
-            } catch {
-                print("Cannot delete background object:", error)
             }
         }
     }
 }
 
+// MARK: - User storage
 extension CoreDataStack: UserStoreProtocol {
     func save(user: UserModel) throws {
         let hash = "\(user.userName)|\(user.email)"
@@ -72,6 +99,7 @@ extension CoreDataStack: UserStoreProtocol {
         entity.id = user.id
         entity.userName = user.userName
         entity.email = user.email.lowercased()
+        entity.timestamp = user.timestamp
         save()
     }
 
@@ -79,12 +107,15 @@ extension CoreDataStack: UserStoreProtocol {
         guard let entity = fetchUser(by: hash) else {
             throw CoreDataError.notFound
         }
-        delete(item: entity)
+        Task {
+            await delete(item: entity)
+        }
     }
 
-    func fetchUsers() -> [UserEntity] {
-        let context = persistentContainer.viewContext
+    func fetchUsers(predicate: NSPredicate? = nil) -> [UserEntity] {
+        let context = persistentContainer.newBackgroundContext()
         let request: NSFetchRequest<UserEntity> = UserEntity.fetchRequest()
+        request.predicate = predicate
         do {
             return try context.fetch(request)
         } catch {
@@ -94,7 +125,7 @@ extension CoreDataStack: UserStoreProtocol {
     }
 
     func fetchUser(by hash: String) -> UserEntity? {
-        print("Fetching Use with hash \(hash)")
+        print("Fetching User with hash \(hash)")
         let context = persistentContainer.viewContext
         let request: NSFetchRequest<UserEntity> = UserEntity.fetchRequest()
         let parts = hash.split(separator: "|")

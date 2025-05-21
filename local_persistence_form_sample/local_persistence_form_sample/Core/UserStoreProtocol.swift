@@ -10,6 +10,6 @@ import Foundation
 protocol UserStoreProtocol {
     func save(user: UserModel) throws
     func delete(by hash: String) throws
-    func fetchUsers() -> [UserEntity]
+    func fetchUsers(predicate: NSPredicate?) -> [UserEntity]
     func fetchUser(by hash: String) -> UserEntity?
 }
