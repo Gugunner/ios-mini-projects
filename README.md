@@ -73,10 +73,6 @@ How to run
 2. Select the app target and a simulator or device, then Build & Run (Cmd+R).
 3. To run tests for a sample, open its test target and run Product → Test (Cmd+U), or use `xcodebuild test` with the appropriate scheme and destination.
 
-Contributing
-
-- Feel free to open issues or submit pull requests to add features, improve docs, or fix bugs.
-
 License
 
 This repository is provided for educational purposes. Add a license file if you intend to change distribution terms.
@@ -85,15 +81,3 @@ Notes
 
 - These are small samples intended for learning and experimentation. They are not production apps.
 - Dependency managers: these samples do not require CocoaPods or Swift Package Manager by default — open the project files and inspect for any package integrations.
-
-Contributing
-
-- Feel free to open issues or submit pull requests to add features, improve docs, or fix bugs.
-
-License
-
-This repository is provided for educational purposes. Add a license file if you intend to change distribution terms.
-
-Contact
-
-For questions or suggestions, open an issue in this repository.
